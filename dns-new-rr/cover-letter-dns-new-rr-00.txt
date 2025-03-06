@@ -1,0 +1,34 @@
+To: dnsop@ietf.org
+Subject: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+From: Zainan (Victor) Zhou <zzn@namefi.io>
+Date: March 4, 2025
+
+Dear DNSOP Working Group,
+
+I am pleased to submit the Internet-Draft "Prefixed TXT Records as Transition Mechanism for New RR Types" (draft-zzn-dns-new-rr-00) for your consideration and feedback.
+
+This draft addresses a long-standing adoption challenge in the DNS ecosystem: the "chicken and egg" problem encountered when introducing new Resource Record (RR) types. New RR types often face slow adoption because implementers hesitate to use them until widely supported, while DNS providers hesitate to support them until widely used.
+
+The approach proposed in this draft is a transition mechanism using prefixed TXT records (with an "RFC<number>" prefix pattern inspired by W3C's vendor prefix approach in CSS) to enable immediate deployment of new RR type functionality before universal support is available. This mechanism provides a clear migration path to the standardized RR type while ensuring continuous functionality during the adoption phase.
+
+Key aspects of the proposal include:
+- A standardized format for prefixed TXT records
+- A defined four-phase transition process
+- Clear processing rules and priority guidelines
+- A chunking mechanism for larger data sets
+- Security considerations specific to this approach
+
+This draft is relevant to DNSOP as it addresses operational concerns with DNS protocol extensions and provides a practical solution that could accelerate innovation in the DNS ecosystem while maintaining backward compatibility.
+
+I would greatly appreciate your feedback on:
+1. The overall approach and whether it addresses a real need
+2. The technical details of the prefixed format and chunking mechanism
+3. Additional security considerations that may need to be addressed
+4. Potential impact on DNS operations and zone management
+5. Whether this should be considered for advancement on the standards track
+
+Thank you for your time and consideration. I look forward to your comments and discussions.
+
+Sincerely,
+Zainan (Victor) Zhou
+zzn@namefi.io
