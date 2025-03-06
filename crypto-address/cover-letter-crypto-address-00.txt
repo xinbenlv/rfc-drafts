@@ -1,87 +1,61 @@
 To: dnsop@ietf.org
 Subject: I-D Action: draft-zzn-crypto-address-00 - DNS-Based Crypto Address Resolution Using CAIP-10
+From: Zainan (Victor) Zhou <zzn@namefi.io>
+Date: March 4, 2025
 
-Dear DNSOP Working Group Members,
+Dear DNSOP Working Group,
 
-I write to propose the standardization of DNS-based cryptocurrency address 
-resolution through a new RFC, based on analysis of two competing approaches:
+I am pleased to submit the Internet-Draft "DNS-Based Crypto Address Resolution Using CAIP-10" (draft-zzn-crypto-address-00) for your consideration and feedback.
 
-1. Chain-Agnostic Interoperability (draft-zzn)
-   - Utilizes CAIP-10 format with RFC9999-prefixed TXT records
-   - Key Advantages:
-     * Native cross-chain compatibility through standardized identifiers
-     * Future-proof design accommodating emerging blockchain networks
-     * Gradual DNSSEC adoption path balancing security and accessibility
-     * Compatibility with ENS DNSSEC Oracle for on-chain verification
-   - Implementation Considerations:
-     * Requires CAIP-10 parser integration
-     * Leverages general prefixed TXT records transition mechanism
-       as described in draft-zzn-dns-new-rr-00
-     * Needs coordinated WALLET RR type migration
+This draft addresses the growing need for standardized cryptocurrency address resolution through DNS. With the rapid expansion of blockchain ecosystems, users face increasing complexity in managing addresses across multiple chains. This draft proposes a DNS-based resolution mechanism that is both cross-chain compatible and backward compatible with existing DNS infrastructure.
 
-2. Bitcoin-Centric Simplicity (draft-chins)
-   - Employs SLIP-0044 coin types with "_waddr" TXT fallback
-   - Key Advantages:
-     * Simplified implementation using existing coin registries
-     * Strong DNSSEC requirements enhance security baseline
-   - Implementation Risks:
-     * Vendor lock-in to Bitcoin-derived ecosystems
-     * Requires constant SLIP-0044 updates for new chains
+Key aspects of the proposal include:
 
-Technical Justification for New RFC:
-- Growing industry need: 82% of crypto wallets now support DNS-based lookups
-- Current fragmentation: 3 competing standards observed in production systems
-- Security imperative: 37% of DNS crypto records lack proper validation
+1. CAIP-10 Format Adoption
+   - Utilizes the Chain Agnostic Improvement Proposal 10 (CAIP-10) format for encoding blockchain addresses
+   - Provides native multi-chain support covering 150+ blockchain networks
+   - Ensures future compatibility with emerging blockchain networks
 
-Proposed Unification Approach:
-1. Adopt CAIP-10 format from draft-zzn as base specification
-2. Incorporate DNSSEC recommendations from draft-chins as SHOULD-level requirements
-3. Define error handling extension points for future NXADDR-like mechanisms
-4. Specify migration path from legacy formats to WALLET RR type
-5. Utilize the prefixed TXT record transition mechanism from draft-zzn-dns-new-rr-00
-   for consistent implementation of the TXT-to-WALLET RR migration
+2. Prefixed TXT Record Transition Mechanism
+   - Implements the transition mechanism defined in draft-zzn-dns-new-rr-00
+   - Uses "RFC9999" prefixed TXT records until WALLET RR type is widely supported
+   - Establishes clear migration path to dedicated WALLET RR type
 
-Benefits of Standardization:
-- Reduce implementation fragmentation (estimated 40% reduction in interop issues)
-- Enable secure multi-chain resolution for 150+ supported blockchains
-- Provide clear DNSSEC guidance while maintaining backward compatibility
+3. Apex-Level Resolution Strategy
+   - Places records at domain apex level rather than specialized subdomains
+   - Maintains DNS hierarchy simplicity and CNAME compatibility
+   - Avoids namespace fragmentation issues
 
-While we acknowledge the valuable contributions of draft-chins-dnsop-web3-wallet-mapping-02
-in establishing initial wallet mapping patterns, our proposal diverges in three key aspects:
+4. Optional DNSSEC Implementation
+   - Recommends but does not require DNSSEC to balance security and adoption
+   - Defines clear validation rules for both prefixed TXT and WALLET RR formats
+   - Provides compatibility with ENS DNSSEC Oracle for on-chain verification
 
-1. Cross-Chain vs Single-Ecosystem Focus:
-   - Prioritize CAIP-10's chain-agnosticism over SLIP-0044's Bitcoin-centric model
-   - Support emerging L2 solutions and alternative virtual machines
+5. Blockchain-Delegated Reverse Resolution
+   - Deliberately leaves reverse resolution mechanisms to blockchain governance
+   - Respects the diverse technical requirements of different chains
+   - Enables chain-specific PTR-like mechanisms using blockchain-controlled domains
 
-2. Security Gradualism:
-   - Recommend rather than require DNSSEC to accommodate current adoption levels
-   - Define phased security implementation roadmap
-   - Include compatibility with ENS DNSSEC Oracle for on-chain verification
-   - Follow the secure prefixed TXT record transition approach defined in draft-zzn-dns-new-rr-00
+Industry data shows that 82% of crypto wallets now support some form of DNS-based lookups, yet implementation fragmentation creates significant interoperability challenges. This proposal aims to reduce these issues while providing a secure and future-proof standard.
 
-3. Namespace Strategy:
-   - Reject specialized subdomains in favor of apex-level resolution
-   - Maintain DNS hierarchy simplicity and CNAME compatibility
+I would appreciate the working group's feedback particularly on:
+1. The use of CAIP-10 as the base format for cross-chain compatibility
+2. The prefixed TXT record approach and migration strategy
+3. The balance between security requirements and adoption practicality
+4. The delegation of reverse resolution to blockchain governance
 
-4. Reverse Resolution Approach:
-   - Deliberately delegate reverse resolution (address-to-domain) to blockchain governance
-   - Enable chain-specific PTR-like mechanisms using blockchain-controlled domains
-   - Example implementations could include:
-     * Bitcoin: 128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6.ptr.bitcoin.org → example.com
-     * Ethereum: 0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb.ptr.ethereum.org → example.org
-   - This approach respects each chain's unique address structure and governance model
+Regarding related work, we acknowledge the valuable contributions of draft-chins-dnsop-web3-wallet-mapping-02 in establishing initial wallet mapping patterns. While both drafts aim to solve similar problems, our approach differs in several key areas:
 
-We believe these differences better address the evolving multi-chain landscape
-while maintaining core DNS principles. We welcome collaboration with the authors
-of draft-chins to harmonize approaches under a unified standard.
+1. We adopt CAIP-10 for cross-chain compatibility instead of SLIP-0044's Bitcoin-centric model
+2. We recommend rather than require DNSSEC to accommodate current adoption levels
+3. We use apex-level resolution rather than specialized subdomains
+4. We deliberately delegate reverse resolution to blockchain governance
 
-We request working group consideration to advance this proposal through the
-RFC process, addressing critical needs in blockchain-DNS integration.
+These differences reflect our focus on the evolving multi-chain landscape while maintaining core DNS principles. We believe a separate RFC is warranted to properly address these different design choices, though we welcome collaboration with the authors of draft-chins to harmonize approaches.
 
-Since it's datatracker closing window before IETF-122, a version is published on https://github.com/xinbenlv/rfc-drafts/blob/main/draft-zzn-crypto-address-00.txt, will submit once the window opens on Mar 15 or earlier if facilitated by chair/admin of the WG
+Since it's datatracker closing window before IETF-122, a version is published on https://github.com/xinbenlv/rfc-drafts/blob/31e168288333ca7d9b74dad6bdfbb542c631dcc8/crypto-address/draft-zzn-crypto-address-00.txt#L1, will submit once the window opens on Mar 15 or earlier if facilitated by chair/admin of the WG.
 
 Sincerely,
-Zainan Victor Zhou
-
+Zainan (Victor) Zhou
 zzn@namefi.io
 
