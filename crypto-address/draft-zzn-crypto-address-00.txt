@@ -54,6 +54,18 @@ Copyright Notice
   c) Maintaining backward compatibility with existing DNS infrastructure
   d) Supporting optional DNSSEC validation
 
+  CAIP-10 format was chosen as the basis for this specification due to
+  its comprehensive support for:
+  
+  - Multiple blockchain networks (in the number of hundreds)
+  - Layer 2 scaling solutions (e.g., Optimism, Arbitrum, Lightning Network)
+  - Layer 3 application-specific chains and specialized networks
+  - Emerging blockchain ecosystems and future network types
+  
+  This multi-layered approach ensures the specification remains viable
+  as blockchain technology continues to evolve beyond base layer chains
+  to more complex scaling and application-specific architectures.
+
   Note: References to "RFC9999" in this document are placeholders for
   the future RFC number assigned to this specification. Implementations
   MUST replace "9999" with the actual RFC number once assigned.

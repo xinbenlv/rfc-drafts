@@ -14,6 +14,7 @@ Key aspects of the proposal include:
 1. CAIP-10 Format Adoption
    - Utilizes the Chain Agnostic Improvement Proposal 10 (CAIP-10) format for encoding blockchain addresses
    - Provides native multi-chain support covering 150+ blockchain networks
+   - Supports Layer 2 and Layer 3 scaling solutions across various blockchain ecosystems
    - Ensures future compatibility with emerging blockchain networks
 
 2. Prefixed TXT Record Transition Mechanism
