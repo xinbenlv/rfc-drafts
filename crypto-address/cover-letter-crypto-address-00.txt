@@ -1,5 +1,5 @@
 To: dnsop@ietf.org
-Subject: Proposal for New RFC on DNS-Based Crypto Address Resolution
+Subject: I-D Action: draft-zzn-crypto-address-00 - DNS-Based Crypto Address Resolution Using CAIP-10
 
 Dear DNSOP Working Group Members,
 
@@ -15,6 +15,8 @@ resolution through a new RFC, based on analysis of two competing approaches:
      * Compatibility with ENS DNSSEC Oracle for on-chain verification
    - Implementation Considerations:
      * Requires CAIP-10 parser integration
+     * Leverages general prefixed TXT records transition mechanism
+       as described in draft-zzn-dns-new-rr-00
      * Needs coordinated WALLET RR type migration
 
 2. Bitcoin-Centric Simplicity (draft-chins)
@@ -36,6 +38,8 @@ Proposed Unification Approach:
 2. Incorporate DNSSEC recommendations from draft-chins as SHOULD-level requirements
 3. Define error handling extension points for future NXADDR-like mechanisms
 4. Specify migration path from legacy formats to WALLET RR type
+5. Utilize the prefixed TXT record transition mechanism from draft-zzn-dns-new-rr-00
+   for consistent implementation of the TXT-to-WALLET RR migration
 
 Benefits of Standardization:
 - Reduce implementation fragmentation (estimated 40% reduction in interop issues)
@@ -53,6 +57,7 @@ in establishing initial wallet mapping patterns, our proposal diverges in three 
    - Recommend rather than require DNSSEC to accommodate current adoption levels
    - Define phased security implementation roadmap
    - Include compatibility with ENS DNSSEC Oracle for on-chain verification
+   - Follow the secure prefixed TXT record transition approach defined in draft-zzn-dns-new-rr-00
 
 3. Namespace Strategy:
    - Reject specialized subdomains in favor of apex-level resolution
@@ -72,6 +77,8 @@ of draft-chins to harmonize approaches under a unified standard.
 
 We request working group consideration to advance this proposal through the
 RFC process, addressing critical needs in blockchain-DNS integration.
+
+Since it's datatracker closing window before IETF-122, a version is published on https://github.com/xinbenlv/rfc-drafts/blob/main/draft-zzn-crypto-address-00.txt, will submit once the window opens on Mar 15 or earlier if facilitated by chair/admin of the WG
 
 Sincerely,
 Zainan Victor Zhou

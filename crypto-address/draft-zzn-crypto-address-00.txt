@@ -16,7 +16,9 @@ Abstract
   specification supports multi-chain address resolution while
   maintaining backward compatibility with existing DNS infrastructure.
   The solution provides an optional DNSSEC implementation path for
-  enhanced security verification.
+  enhanced security verification. The prefixed TXT record approach used
+  in this specification follows the transition mechanism defined in
+  [I-D.zzn-dns-new-rr].
 
 Status of This Memo
 
@@ -69,7 +71,8 @@ Copyright Notice
 2.1. TXT Record Format
 
   Crypto addresses MUST be encoded using CAIP-10 format prefixed with
-  "RFC9999" until the WALLET RR type is standardized:
+  "RFC9999" until the WALLET RR type is standardized, following the 
+  prefixed TXT record transition mechanism defined in [I-D.zzn-dns-new-rr]:
 
   RFC9999 <caip10_encoded_address>
 
@@ -248,6 +251,10 @@ Copyright Notice
   [CAIP-10]  Gomes, P., "CAIP-10: Account ID Specification",
             Chain Agnostic Improvement Proposals, October 2023,
             <https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-10.md>
+
+  [I-D.zzn-dns-new-rr] Zhou, Z., "Prefixed TXT Records as Transition Mechanism 
+            for New RR Types", Internet-Draft, draft-zzn-dns-new-rr-00,
+            March 2025.
 
   [ENS-DNSSEC] Johnson, N., "ENS DNSSEC Documentation",
             Ethereum Name Service, January 2023,
