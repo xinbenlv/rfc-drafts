@@ -1,0 +1,3 @@
+[submodule "authcodesec"]
+	path = authcodesec
+	url = git@github.com:xinbenlv/rfc-draft-authcodesec.git
