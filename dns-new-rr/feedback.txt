@@ -1,0 +1,641 @@
+```
+from:	Mark Andrews <marka@isc.org> via ietf.org 
+to:	Victor Zhou <zzn@namefi.io>
+cc:	dnsop@ietf.org
+date:	Mar 6, 2025, 2:52 PM
+subject:	Re: [DNSOP] I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	ietf.org
+signed-by:	ietf.org
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+
+Please stop perpetuating the myth that it is hard to add new record types.  It isn’t.
+
+Nameservers support RFC 3597 Handling of Unknown DNS Resource Record (RR) Types so there
+should be NO nameservers after 20+ years that don’t support it.  Nameservers where supposed
+to treat unknown types as opaque data before this was published.  This allowed recursive
+servers to lookup and cache unknown types.  The hard part was the authoritative servers
+that needed to be upgraded before you could use a new type.  This addressed that issue.
+
+Resolver code has ALWAYS been required to support looking up unknown type codes.  If your
+resolver library doesn’t support that it is BROKEN.  File a bug report.  I can use resolver
+code from BSD 4.2 and lookup every type that has ever been specified.  That is 40 year old
+code now.
+
+If your DNS provider doesn’t support UNKNOWN TYPES move to one that does. There is no technical
+reason not to support UNKNOWN TYPES.  They may try to feed you a line of bovine excrement as to
+why they can’t support it but don’t fall for it.  It’s their job to support ALL types.  They work
+for you!
+
+When specifying a new types show examples using UNKNOWN TYPE FORMAT as well as whatever
+display format is most appropriate for the type.  More recent type specifications have
+done this.
+
+These are the same A record.
+
+        example.com TYPE1 \# 4 0a000001
+        example.com A 10.0.0.1
+
+Mark
+```
+
+Our responses
+```
+from:	Victor Zhou <zzn@namefi.io>
+to:	Mark Andrews <marka@isc.org>
+cc:	dnsop@ietf.org
+date:	Mar 6, 2025, 3:07 PM
+subject:	Re: [DNSOP] I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	namefi.io
+Thanks Mark.
+
+Our intention was not to claim it's hard to add a new RR type. it is not hard to "add" it. It's hard to gain consensus without showing adoption first.
+
+It's not hard to declare "I" (unilaterally) am going to start treating RR Type = N as a new type and the client I develop will treat RR Type = N that way.
+It's extremely hard, however, to show the world that some new RR Type = N has been used by many services and clients for a specific use case and in a certain way. That's why we are intending to come up with a way to show early adoption, begin early adoption, and then migrate.
+
+W3C vendor prefix is a good example. Every browser can declare their way of adding new CSS tricks but it's hard to get website builders to adopt them individually, so they come up with a vendor prefix and ultimately use them to adopt new CSS attributes.
+
+
+Victor,  CEO/Founder of Namefi (D3Serve Labs Inc.)
+Building digital trust and tokenizing domain names for trading, DeFi and future Internet. https://namefi.io
+```
+
+Mark's response
+```
+from:	Mark Andrews <marka@isc.org>
+to:	Victor Zhou <zzn@namefi.io>
+cc:	"dnsop@ietf.org WG" <dnsop@ietf.org>
+date:	Mar 6, 2025, 4:15 PM
+subject:	Re: [DNSOP] I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	isc.org
+signed-by:	isc.org
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+
+> On 7 Mar 2025, at 10:07, Victor Zhou <zzn@namefi.io> wrote:
+>
+> Thanks Mark.
+>
+> Our intention was not to claim it's hard to add a new RR type. it is not hard to "add" it. It's hard to gain consensus without showing adoption first.
+
+Well that’s what your introduction claimed.
+
+1. Introduction
+
+  The DNS protocol [RFC1035] has a well-established process for
+  introducing new Resource Record (RR) types through the IANA registry.
+  However, the deployment of new RR types faces significant practical
+  challenges:
+
+  1. DNS software must be updated to recognize and handle the new RR type
+  2. DNS service providers must update their management interfaces
+  3. Authoritative server operators must deploy updated software
+  4. Content management systems and domain control panels must be updated
+  5. Recursive resolvers must properly handle the new RR type
+
+  These challenges create a "chicken and egg" problem: implementers
+  hesitate to use new RR types until they are widely supported, while
+  DNS providers hesitate to support RR types until they are widely used.
+
+  This document specifies a transition mechanism using prefixed TXT
+  records to enable immediate deployment of new RR type functionality
+  before universal support is available, while providing a clear
+  migration path to the standardized RR type.
+
+>
+> It's not hard to declare "I" (unilaterally) am going to start treating RR Type = N as a new type and the client I develop will treat RR Type = N that way.
+> It's extremely hard, however, to show the world that some new RR Type = N has been used by many services and clients for a specific use case and in a certain way. That's why we are intending to come up with a way to show early adoption, begin early adoption, and then migrate.
+
+You write a specification that specifies the type.  I’ve done that a couple of times.  You get IANA to allocate a type code.  You use it.  Whether you get back a TXT record or a opaque blob your application is going to have to decode it.
+
+If you want to work on refining the type code then use a type code from 65280-65534 temporarily.  Change the typecode whenever you change the wire format so you don’t break clients using the old wire format.  I did this with DLV when developing the code to support it.  I do this with all new type codes while they are unstable.  Once they are assigned a type code I update the code to use the assigned type code and merge the code into the released code.  I do similar things while developing EDNS code points.
+
+Add words like “For this draft we will use TYPE65289 for testing purposes.” to your drafts.  What I’ve see happen too often is people going to IANA too early and then having to go back and get a new type code or try to change an existing type code.  As a nameserver developer (BIND) I never want to have to change the code to support an allocated type code once it is written sans fixing bugs.  Code that is being used for testing I expect to have to change and possibly throw away.  BIND is designed to allow you to add new type easily.  Many people have done it in the past.
+```
+
+Joe Abley's response
+```
+from:	Joe Abley <jabley@strandkip.nl> via ietf.org 
+to:	Victor Zhou <zzn@namefi.io>
+cc:	Mark Andrews <marka@isc.org>,
+dnsop@ietf.org
+date:	Mar 7, 2025, 12:38 AM
+subject:	Re: [DNSOP] Re: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	ietf.org
+signed-by:	ietf.org
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+Hi Victor,
+
+On 7 Mar 2025, at 00:10, Victor Zhou <zzn=40namefi.io@dmarc.ietf.org> wrote:
+
+> Our intention was not to claim it's hard to add a new RR type. it is not hard to "add" it. It's hard to gain consensus without showing adoption first.
+
+What consensus do you mean?
+
+New RRTypes are assigned based on expert review. Consensus is not required.
+
+> It's not hard to declare "I" (unilaterally) am going to start treating RR Type = N as a new type and the client I develop will treat RR Type = N that way.
+
+The normal process is that you submit a template and get an assignment. You don't need to unilaterally declare the existence of a new RRType.
+
+> It's extremely hard, however, to show the world that some new RR Type = N has been used by many services and clients for a specific use case and in a certain way.
+
+Which parts of the world are you trying to convince in this example?
+
+
+Joe
+```
+
+```
+from:	Victor Zhou <zzn@namefi.io>
+to:	Mark Andrews <marka@isc.org>
+cc:	"dnsop@ietf.org WG" <dnsop@ietf.org>,
+jabley@strandkip.nl
+date:	Mar 7, 2025, 10:50 AM
+subject:	Re: [DNSOP] I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	namefi.io
+To: Mark Andrews <marka@isc.org>
+Cc: dnsop@ietf.org
+Subject: Re: [DNSOP] I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+
+Dear Mark,
+(CC'ing jabley@strandkip.nl as a context for a follow up reply I will send out soon.)
+
+Thank you for your thoughtful feedback. You make excellent technical points regarding the DNS protocol itself, and you are absolutely correct that when narrowing our focus to DNS server software compliant with RFC 1034/1035 and RFC 3597, adding new record types is indeed well-supported.
+
+I should clarify that our draft addresses challenges with the DNS ecosystem as a whole rather than just the core DNS server software. The practical adoption barriers we've encountered include:
+
+1. Domain management interfaces (GoDaddy, Google Domains, Route 53, etc.) that only expose predefined record types in their UIs and APIs, with no option to input records by numeric type
+
+2. DNS control panels and management software that lack support for entering arbitrary record types, even when the underlying nameservers would handle them correctly
+
+3. Public DNS resolvers and CDN providers that require special processes to flush or update their caches for non-standard record types
+
+4. Content management systems and web hosting platforms with DNS management features that only support common record types
+
+While filing bugs against these systems is theoretically possible, the reality is that getting widespread changes implemented across dozens of providers presents significant practical challenges and timeline uncertainties.
+
+Our prefixed TXT record approach aims to provide a practical transition path that works with the ecosystem as it exists today, while encouraging migration to proper record types as support becomes more widespread. This mirrors successful approaches in other standards bodies, like the W3C vendor prefixes, which helped bridge similar adoption gaps.
+
+We appreciate your expertise and would welcome any suggestions on how we might improve this approach or better articulate the ecosystem challenges we're addressing.
+
+Best regards,
+Victor Zhou
+```
+
+Victor's response
+```
+Hi Joe,
+Thank you for your questions. I should clarify what I meant by "consensus."
+I'm explicitly not referring to IETF draft consensus or the formal standards process. You're absolutely right that new RRTypes are assigned based on expert review without requiring broad IETF consensus.
+What I meant was the practical ecosystem adoption consensus that follows after a new RRType is defined and assigned. This is a kind of "consensus through adoption" where DNS service providers, registrars, hosting companies, and other ecosystem participants effectively vote with their development resources on whether to implement support for a new RRType.
+When a specification demonstrates widespread real-world usage, it adds significant weight to the likelihood of broader industry adoption. This creates a positive feedback loop - providers are more likely to support RR types that already have demonstrated usage and value in the ecosystem.
+Consider an analogy from the banking industry: it took banks nearly 20 years to fully adopt chip cards despite the clear security benefits. This wasn't because of technical difficulty in the protocol, but because each institution had to make practical tradeoffs: upgrading software, retraining staff, updating workflows, and considering customer impact.
+Similarly, for registrars and DNS providers to support a new RRType, they need to:
+Modify their customer-facing interfaces
+Update their API documentation
+Enhance their validation logic
+Train customer support staff
+Allocate engineering resources that might otherwise go elsewhere
+This economic and practical "market consensus" is what's challenging to achieve, not the technical implementation of the RRType itself or getting it assigned by IANA.
+Our prefixed TXT approach is intended to provide a transition path that works within existing constraints while building evidence of demand and adoption that might encourage providers to implement proper support for new RRTypes.
+I hope this clarifies what I meant by consensus - it's specifically about practical industry adoption rather than the standards process itself.
+Best regards,
+Victor Zhou
+```
+
+```
+
+...
+
+Patrick<pmevzek@godaddy.com> Says
+
+You might want to choose other examples on things that could exist… as what you list already exists:
+
+§3.1 WALLET: already exists as RRtype, see value 262 in IANA registry
+§3.2 and §3.3 about basically storing public keys and certificates: see record types CERT, OPENPGPKEY, and TLSA.
+
+Also not using RFC numbers already existing and unrelated would be better I think.
+```
+
+```
+Ray Bellis <ray@bellis.me.uk> Fri, 07 March 2025 17:17 UTC
+Indeed, and it's often a very quick process.
+
+As a member of the RR Expert Review Panel, I am strongly against this 
+proposal primarily because it is far too TXT-specific.
+
+The vast majority of the RRs that come to our attention are *not* based 
+on TXT records.   Sometimes proposals come to us that are shoe-horned 
+unnecessarily into TXT syntax, when a much more optimal encoding with a 
+dedicated RR would be far more appropriate.
+
+[I also find the rationale specious, but IMHO that's moot given my main 
+concern].
+
+Ray
+
+```
+
+Victor response to Ray
+```
+Dear Ray,
+Thank you for your feedback as a member of the RR Expert Review Panel. I sincerely value your expertise and perspective on our proposal.
+I completely agree with your point that applying for a new RR type is "often a very quick process." The technical process of defining and obtaining a new RR type is indeed straightforward.
+However, while defining a new RR type may be quick, achieving widespread implementation and adoption presents a different set of challenges. The history of TLSA (type 52) for DANE illustrates this journey:
+Though technically sound and RFC-standardized since 2012, TLSA still has room to grow to reach the adoption it originally anticipated
+Many domain registrars and DNS hosting providers are still working toward exposing these specialized RR types in their management interfaces
+This lack of universal support has hindered opportunities for DANE, with HTTPS certificate distribution ultimately developing through alternative channels like Certificate Authorities
+Major web browsers haven't yet implemented DANE validation, presenting an opportunity for future security enhancements
+The SPF evolution might offer some instructive lessons in this regard:
+SPF began with a dedicated RR type (99) alongside TXT records
+Despite large adoption of SPF as a technology, the ecosystem didn't seem to show strong favor for the new RR type over the TXT fallback
+RFC 7208 (2014) ultimately acknowledged this reality by deprecating the SPF RR type
+I recognize that dedicated RR types often provide superior performance and efficiency compared to TXT records - these technical advantages can become powerful driving factors for eventual adoption. Our proposal isn't intended to permanently favor TXT records, but to create a bridge that works within today's implementation constraints while enabling immediate adoption. TXT records allow people to begin using new functionality today in the ecosystem as it exists, while establishing a clear path to migrate to dedicated RR types as their benefits become apparent and accessible.
+I would be grateful for your guidance on how we might better balance technical rigor with practical adoption challenges in our approach.
+Respectfully,
+Victor Zhou
+```
+
+
+```
+from:	John Levine <johnl@taugh.com>
+to:	dnsop@ietf.org
+cc:	zzn@namefi.io
+date:	Mar 7, 2025, 4:30 PM
+subject:	Re: [DNSOP] Re: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	iecc.com
+signed-by:	taugh.com
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+Are you familiar with RFCs 8552 and 8553, and the IANA registry that RFC 8552 created?
+
+Not to put too fine a point on it, but your proposal appears to be
+worse than the existing practice that those two RFCs describe.
+
+It would be helpful if you could explain why this is an improvement.  Also look at
+that registry, which contains over sixty existing underscore prefixes, and tell
+us why if you don't want to create a new RRTYPE, you would not just add another
+prefix to that registry and use that.
+
+R's,
+John
+```
+
+```
+from:	Dave Lawrence <tale@dd.org> via ietf.org 
+to:	dnsop@ietf.org
+date:	Mar 7, 2025, 3:43 PM
+subject:	[DNSOP] Re: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailing list:	dnsop@ietf.org Filter messages from this mailing list
+mailed-by:	ietf.org
+signed-by:	ietf.org
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+
+Victor Zhou writes:
+> It's extremely hard, however, to show the world that some new RR Type = N has
+> been used by many services and clients for a specific use case and in a certain
+> way. That's why we are intending to come up with a way to show early adoption,
+> begin early adoption, and then migrate.
+
+I don't quite understand how your proposed mechanism is an improvement
+for a way to show early adoption ... except, acknowledging John
+Levine's point, that current web platforms for editing zone contents
+continue to be an obstacle for using new types.  Do you have something
+else in mind?
+
+That was just one of your five bullet points, and if it's the driving
+one then it should be focused and the four others, which are largely
+inaccurate, dropped.  Or, we could focus on getting the biggest
+platforms to allow unknown types.
+
+Even if this proposal is pursued, let's not kid ourselves about "and
+then migrate".  It's really just ultimately a means for overlaying
+multiple uses of TXT indefinitely.
+```
+
+Victor's response to Dave and John
+```
+Dear John and Dave,
+
+Thank you both for your thoughtful feedback on our draft proposal.
+
+John - Yes, I am aware of RFCs 8552 and 8553 and the IANA registry for DNS Underscore Names that 8552 creates. Our intention is *not* to compete with or replace the underscore naming scheme, but rather to provide a complementary approach specifically focused on progressive adoption of new RR types.
+
+Dave - You're right that platform limitations for editing zone contents are a significant obstacle. That is indeed the driving factor among the issues we listed, and I agree we should focus more narrowly on this particular challenge.
+
+To address both of your points:
+
+1. The key difference between the TXT methods and the underscore naming approach is the explicit focus on transitioning to proper RR types. While underscore names create a sustainable naming scheme within TXT records, our proposal aims to establish a clear migration path from TXT to dedicated RR types.
+
+2. There are some technical considerations that make TXT records potentially advantageous for progressive adoption compared to underscore leaf nodes:
+
+   - CNAME compatibility: Underscore domains cannot coexist with CNAME records at the same owner name, limiting flexibility in certain deployment scenarios.
+   
+   - DNSSEC delegation: Underscore nodes may complicate DNSSEC delegation patterns in some deployment models.
+   
+   - UI visibility: Many DNS management interfaces have special handling for underscore domains (sometimes hiding them from default views), while TXT records are universally accessible.
+
+3. Dave, regarding your skepticism about migration - you raise a valid concern. History shows that temporary solutions often become permanent. However, our goal is to design incentives that encourage migration, not just provide another way to overload TXT. This includes clear documentation of the performance and technical advantages of proper RR types once available.
+
+I agree that focusing on getting the biggest platforms to support unknown types would be the ideal solution. Perhaps our proposal could be reframed to emphasize this goal more directly, while providing a practical bridge until that broader support materializes.
+
+Would either of you have suggestions on how we might better structure this proposal to address the practical adoption challenges while avoiding the pitfalls you've identified?
+
+Best regards,
+Victor Zhou
+```
+
+John Levine wrote
+```
+from:	John Levine <johnl@taugh.com>
+to:	dnsop@ietf.org
+cc:	zzn@namefi.io
+date:	Mar 7, 2025, 8:03 PM
+subject:	Re: trying to understand the point of Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	iecc.com
+signed-by:	taugh.com
+security:	 Standard encryption (TLS) Learn more
+:	Important mainly because it was sent directly to you.
+I appreciate that you're relatively new to the DNS, but it really looks like
+you're repeatedly guessing about how the DNS works, and often guessing wrong.
+
+How about backing up a few steps and checking your guesses, so you can make more
+useful proposals ? There's a lot of people who'd be happy to help if you'd just
+ask.
+
+>The SPF evolution might offer some instructive lessons in this regard:
+>   1. SPF began with a dedicated RR type (99) alongside TXT records
+
+No, it did not.  The actual history is easily available if you'd just ask.
+
+> The history of TLSA (type 52) for DANE illustrates this journey:
+
+>   - Though technically sound and RFC-standardized since 2012, TLSA still
+>   has room to grow to reach the adoption it originally anticipated
+
+TLSA's lack of acceptance has very little to do with problems publishing TLSA
+records. It has far more to do with its depending on DNSSEC, and even more with
+the fact that the people who write web browsers have no interest in using it.
+The other TLSA application is for mail servers where there is a separate thing
+callled MTA-STS that was invented to avoid needing DNSSEC.
+
+Again, the history is easily available if you'd just ask.
+
+R's,
+John
+
+```
+
+
+Robert Edmonds wrote
+```
+from:	Robert Edmonds <edmonds@mycre.ws>
+to:	Victor Zhou <zzn@namefi.io>
+cc:	dnsop@ietf.org
+date:	Mar 7, 2025, 7:24 PM
+subject:	Re: [DNSOP] I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	mycre.ws
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+
+
+Victor Zhou wrote:
+> Dear DNSOP Working Group,
+>
+> I am pleased to submit the Internet-Draft "Prefixed TXT Records as Transition
+> Mechanism for New RR Types" (draft-zzn-dns-new-rr-00) for your consideration
+> and feedback.
+
+Hi,
+
+I do not understand the proposed chunking mechanism. All resource
+records having the same owner name, class, and type are part of a
+resource record set and must be transferred atomically.
+
+Your proposed "chunks" are resource records that form an RRset,
+potentially together with other unrelated resource records that are not
+part of the chunked data. These "chunks" cannot be transferred
+independently.
+
+These quotes from your document do not make sense to me if the "chunks"
+are some or all of the RRs in a particular RRset:
+
+- "Record authors SHOULD keep chunks small enough to avoid UDP
+fragmentation (typically under 512 bytes including DNS overhead)"
+
+- "Implementations SHOULD implement a timeout mechanism for reassembly
+to handle cases where some chunks might be missing or delayed"
+
+- "The time spent waiting for missing chunks"
+
+- "Zone transfer mechanisms SHOULD ensure all chunks are transferred
+together to maintain consistency."
+
+Because all of the "chunks" will be received together or not at all.
+
+Either there is a new transport between resolvers and authoritative
+servers which allows retrieval of individual RRs within an RRset which
+is not described anywhere in the document, or the "chunks" need a scheme
+allowing them to be divided into multiple RRsets that can be retrieved
+in independent queries.
+
+Separately, I also agree with John Levine's comments regarding RFCs
+8552, 8553, and the underscore registry.
+
+--
+Robert Edmonds
+```
+
+```
+from:	Andrew Sullivan <ajs@crankycanuck.ca> via ietf.org 
+reply-to:	dnsop@ietf.org
+to:	dnsop@ietf.org
+date:	Mar 7, 2025, 9:31 PM
+subject:	[DNSOP] Re: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailing list:	dnsop@ietf.org Filter messages from this mailing list
+mailed-by:	ietf.org
+signed-by:	ietf.org
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+
+Dear colleagues,
+
+On Fri, Mar 07, 2025 at 05:39:06PM -0500, Victor Zhou wrote:
+
+>Underscore Names that 8552 creates. Our intention is *not* to compete with
+>or replace the underscore naming scheme, but rather to provide a
+>complementary approach specifically focused on progressive adoption of new
+>RR types.
+
+If there is an example of "progressive adoption" of a new RRTYPE I'd like to know of it.  The best example of such an intended progression I can think of is SPF, and the history there tells rather strongly against anything like any kind of progressive or even partial adoption.
+
+When we did SPFBIS, one of the things we learned was that the specification with a dual path of TYPE99 and TXT turned out to have a subtle bug in which two fully conforming implementations couldn't interoperate anyway.  The reason TYPE99 got deprecated was because we had to pick one, and that's the one we picked.  (I hope we don't need to re-hash in this thread why that was the correct or incorrect decision.  Whatever you, gentle reader, believe about that correctness, I'll accept it as stipulated that my co-chair and I decided incorrectly about consensus.)  The lesson I, at least, took from this was that specifying two different ways to communicate the same information through the DNS was a serious conceptual error.  That's not too surprising to me, since the very point of strong typing in databases is not to have more than one way to communicate the same information.  Also, in my experience in a past life as a database guy, every time you try to accommodate data without using your datatypes (stuffing it all into a blob or whatever) and then later try to normalize the data, you end up dancing through a bunch of transitional hoops to get the stuffed data into your shiny new datatypes.  This might work when you're in charge of the database and the consuming clients, too.  It doesn't work when you don't own both ends of the communication.  I think what this boils down to is that I don't believe phase 3 in section 2.2 of the draft has reliable termination conditions, so it amounts in practice to the principle, "Use TXT for your RRTYPEs," only with the additional provision that all the TXT records have to carry around some additional cruft in their payloads forever.
+
+The chunking mechanism strikes me, at least on first reading, as somewhat unreliable given caches and truncation in the DNS.  Since any RR of an RRSET ought to be as good as any other, you're not really in a position to signal upstream that you absolutely want the whole RRSET as the authoritative server has it or else you want not to get it.  Now, it is true that a cache should not have a partial RRSET that it delivers in an answer if it got that RRSET via UDP and truncated for some reason.  I am not convinced it is wise to rely on that principle in order to ensure that the entire RRSET for a given name and type will be guaranteed delivered to a final consumer; yet this chunking mechanism absolutely would require such a guarantee.  I'm admittedly pretty rusty, so it might just be rust; but I cannot think of a case where promises about the completeness of the RRSET for a given name and type are made except I suppose in zone transfers.  So this seems like an innovation in what we expect of RRSETs, and how we could convince ourselves that the expectation is already met in all deployed software under all deployed conditions is obscure to me.  The draft says that implementations must reject a chunked data set with missing chunks and so forth, but I have no clue what an implementation might do if it encounters this condition.  That seems to me to be a fatal objection, because the draft proposes this transition mechanism as one for any future new RRTYPE, and so will present an impediment to RRTYPEs that are naturally inclined to scrape the top of the TXT RR limit.  It's particularly problematic because this mechanism adds overhead that a native RRTYPE wouldn't have: the "TXT limit problem" might actually be an artifact of using the mechanism in this draft, and yet it could be the source of deployment trouble.
+
+In sum, while I understand and have a lot of sympathy with the intent behind this draft (and anyone who has heard my extended complaining about TXT records and datatypes and so on will be able to confirm that sympathy), I don't think it is a good idea to pursue because I do not believe it will achieve what it would need to achieve.  It will, however, complicate future specifications for uses of the DNS. It will inevitably encourage people to invent compatibility arrangements through TXT when they are not needed.  That will provide a drag on adoption of a hypothetically proposed RRTYPE even as it also causes said RRTYPE to be hammered into the shape of a TXT payload.  Unfortunately, this is an example of good intentions and the destination for which they can be pavement.
+
+Best regards,
+
+A
+
+--
+Andrew Sullivan
+ajs@crankycanuck.ca
+```
+
+John Levine wrote
+
+```
+from:	John R Levine <johnl@taugh.com>
+to:	Victor Zhou <zzn@namefi.io>,
+dnsop@ietf.org
+date:	Mar 8, 2025, 10:12 AM
+subject:	Re: [DNSOP] Re: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	taugh.com
+signed-by:	taugh.com
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+
+On Fri, 7 Mar 2025, Victor Zhou wrote:
+> John - Yes, I am aware of RFCs 8552 and 8553 and the IANA registry for DNS
+> Underscore Names that 8552 creates. Our intention is *not* to compete with
+> or replace the underscore naming scheme, but rather to provide a
+> complementary approach specifically focused on progressive adoption of new
+> RR types.
+
+But we have forty years of history that tells us that "progressive
+adoption of new RR types" does not happen.  Either a new RR is defined and
+people use it, or we repurpose TXT.  There is nothing in between.
+
+The SPF record is a good example of this.  SPF was designed and
+implemented using TXT records.  (They should have used a _spf prefix but
+by the time it got to the IETF, it was widely deployed and too late to
+change.)  When RFC 4408 was nearly done, a handful of DNS people in the
+IETF insisted that we use a a different RRTYPE and wouldn't let us publish
+the RFC unless we added the SPF type.  We knew nobody would use it but we
+shrugged our shoulders and added it.  To nobody's surprise, people kept
+using the TXT record and the SPF record was eventually abandoned.
+
+I encourage you to find something else to work on, because this one is a
+dead end.
+
+Regards,
+John Levine, johnl@taugh.com, Taughannock Networks, Trumansburg NY
+Please consider the environment before reading this e-mail. https://jl.ly
+
+```
+
+
+Tim Wicinski wrote
+```
+from:	Tim Wicinski <tjw.ietf@gmail.com>
+to:	John R Levine <johnl@taugh.com>
+cc:	Victor Zhou <zzn@namefi.io>,
+dnsop@ietf.org
+date:	Mar 8, 2025, 12:32 PM
+subject:	Re: [DNSOP] Re: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	gmail.com
+signed-by:	gmail.com
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+(speaking as a chair)
+
+Thanks for keeping this discussion civil and reasonable.  I can attest that not only folks "new" to DNS can forget things along the way.
+Just a few weeks ago Mr Levine bonked me on the head (literally) for forgetting RFC6686 "Resolution of the Sender Policy Framework (SPF) and Sender ID Experiments"
+existed.  
+
+Also, unless the RR Type request requires resolver processing, the expert review team has been very reasonable to work with. 
+
+tim
+```
+
+
+Mark Andrews wrote
+```
+from:	Mark Andrews <marka@isc.org>
+to:	Tim Wicinski <tjw.ietf@gmail.com>
+cc:	"John R. Levine" <johnl@taugh.com>,
+Victor Zhou <zzn@namefi.io>,
+"dnsop@ietf.org WG" <dnsop@ietf.org>
+date:	Mar 8, 2025, 1:48 PM
+subject:	Re: [DNSOP] I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailed-by:	isc.org
+signed-by:	isc.org
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+
+If one want an example of changing type code look at SMTP.  SMTP went from address records to MX records.  The change took about 2 decades before people where happy to not publish A records for mail addresses.  It takes time to get software that supports the change deployed.  There is no one now that would be worried about publishing a MX record without an A record at the same name but people where still worried about the turn of the century.
+
+A to AAAA is still in transition. It’s progressing well but had people saying for a long time that the transition is never going to happen.  Today just about every piece of software supports looking up both A and AAAA records but it has taken nearly 30 years to get to this state.
+
+SPF was never given enough time for the transition to happen.  The software that looked up SPF records was just starting to be deployed when people complained that it had failed.  This is the same software that took MX well over a decade to be deployed.  As for the FUD that was thrown around about the two types not working together.  One just had to publish both types until there was critical mass of the SPF software deployed.  Setting a sunset date for the TXT version would have been a good idea as would have been publishing all the examples using SPF rather than TXT.  We had a agreement to continue the transition to TYPE99 regardless of whether experiment succeeded or failed but that got reneged on.  There NEVER WAS an experiment to see if transition of types could work.
+
+SPF is an example of how to not manage a type transition, nothing more than that.
+
+Mark
+```
+
+Andrew Sullivan wrote
+```
+from:	Andrew Sullivan <ajs@anvilwalrusden.com> via ietf.org 
+reply-to:	dnsop@ietf.org
+to:	dnsop@ietf.org
+date:	Mar 8, 2025, 4:34 PM
+subject:	[DNSOP] Re: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailing list:	dnsop@ietf.org Filter messages from this mailing list
+mailed-by:	ietf.org
+signed-by:	ietf.org
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+Dear colleagues, especially Mark,
+
+On Sun, Mar 09, 2025 at 08:47:57AM -0500, Mark Andrews wrote:
+
+>SPF was never given enough time for the transition to happen.  The software that looked up SPF records was just starting to be deployed when people complained that it had failed.
+
+As I noted in my message to the list yesterday, that was not the basis on which the SPFBIS WG reached the conclusion it did.  As I suggested then, I think it would be something short of a good use of everyone's time to re-hash that discussion here, but I encourage anyone who wishes to re-live that exciting chapter in IETF history to review the archives at https://mailarchive.ietf.org/arch/browse/spfbis.
+
+>As for the FUD that was thrown around about the two types not working together.
+
+I don't believe that is what I said yesterday, and I don't believe that is what I said at the time; moreover, Mark, I think it is irresponsible of you to claim that a consensus of a WG is FUD.  My co-chair and I at the time determined (I believe correctly) that there was a consensus in the WG that two fully-conforming implementations of the extant SPF RFC could be deployed that nevertheless would not interoperate.  That is not the same thing as the two types "not working together".  The WG determined that a formally backward-incompatible version of the specification was needed in any case.  Your remark about what one "just had to do" was, of course, one way to solve that problem, but it was not what the specification required.  Requiring what you suggest would also have been a formal change to the specification.  The WG had a consensus to make a different change than the one you wanted.  I'm sorry you didn't get what you wanted, but that's the way rough consensus sometimes is.
+
+I wouldn't belabour this point, except that it gets to the core of the draft under discussion.  In the best worked example anyone can think of, where something very much along the lines of the draft was tried, people just didn't move away from TXT.  Now, you and I can wish, all day long, about some alternative future where, if we waited long enough (which might be "heat death of the universe" or maybe just "DNS is fully replaced", whichever is sooner) TYPE99 would have been widely deployed and TXT would be on the way out.[*]  The reality is, however, that there just wasn't much in the way of positive evidence that TYPE99 was rising in deployment.  If there was the kind of desire to move to a data-specific RRTYPE for a use like this, then we should have seen that movement.  And that is a principal objection to a mechanism like the draft before us proposes. It all but guarantees a backward-compatibility mechanism gets deployed, and that lessons the pressure to deploy any new RRTYPE.
+
+[*] Of course, publishing an RFC (as you wished for SPF and as the draft under consideration proposes for other types) that would guarantee both TYPE_N_ and TXT records in the DNS for the same use is pretty unlikely to hurry along the state of affairs in which TYPE_N_ alone appears.  This seems to me to be another way of making the same point. 
+
+Best regards,
+
+A
+
+--
+Andrew Sullivan
+ajs@anvilwalrusden.com
+```
+
+```
+from:	Ray Bellis <ray@bellis.me.uk> via ietf.org 
+to:	dnsop@ietf.org
+date:	Mar 10, 2025, 3:01 AM
+subject:	[DNSOP] Re: I-D Action: draft-zzn-dns-new-rr-00 - Prefixed TXT Records as Transition Mechanism for New RR Types
+mailing list:	dnsop@ietf.org Filter messages from this mailing list
+mailed-by:	ietf.org
+signed-by:	ietf.org
+security:	 Standard encryption (TLS) Learn more
+:	Important because previous messages in the conversation were important.
+On 07/03/2025 00:54, John Levine wrote:
+
+> Over a decade ago I proposed an extension language that the crudware
+> could use to provision new types automatically.  It works, I
+> implemented it, but nobody was interested:
+>
+> https://datatracker.ietf.org/doc/draft-levine-dnsextlang/
+
+I liked it.   If you're interested in reviving it, count me in!
+
+Ray
+```

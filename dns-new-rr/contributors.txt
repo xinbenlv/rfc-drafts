@@ -1,0 +1,10 @@
+- Mark Andrews <marka@isc.org>
+- Victor Zhou <zzn@namefi.io>
+- Joe Abley <jabley@strandkip.nl>
+- Patrick <pmevzek@godaddy.com>
+- Ray Bellis <ray@bellis.me.uk>
+- John Levine <johnl@taugh.com> / John R Levine <johnl@taugh.com>
+- Dave Lawrence <tale@dd.org>
+- Robert Edmonds <edmonds@mycre.ws>
+- Andrew Sullivan <ajs@crankycanuck.ca> / Andrew Sullivan <ajs@anvilwalrusden.com>
+- Tim Wicinski <tjw.ietf@gmail.com>

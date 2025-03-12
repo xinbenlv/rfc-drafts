@@ -1,0 +1,42 @@
+
+On Thu, Mar 6, 2025 at 2:34 PM Victor Zhou <zzn@namefi.io> wrote:
+Bob,
+
+On Thu, Mar 6, 2025 at 12:05 PM Bob Harold <rharolde@umich.edu> wrote:
+
+On Thu, Mar 6, 2025 at 1:44 PM Victor Zhou <zzn@namefi.io> wrote:
+
+We already have a problem with too many TXT records with the same name used for different purposes.   SPF, various validations, and who knows what else are all at the same name.   Could we do instead:
+_RFCxxxx.domain.name  IN  TXT "<data>"
+
+That reduces the packet size and the amount of records that the application has to process and discard, since it will only ask for its own records.
+
+Agree with you Bob that this is an important decision (whether to do it subdomain or as apex), I can include your feedback in the updated RFC,
+
+Here is what I think the tradeoffs of each: (please correct me as wrong)
+
+- Subdomain approach (`_rfcxxx.domain.name IN TEXT "<data>"`) is usually managed in a zone *under* `domain.name`, making it more separate, and less spammy, and enable larger numbers of records
+
+The subdomain records would typically be in the same zone.  They *can" be separated into another zone, if desired.
+
+ 
+- Apex TXT approach is usually managed in the zone *of* `domain.name`, making it easier to manage, and if the parent zone want to delegate child zone out, having apex TXT record method doesn't interfere with that too.
+
+It would be impossible to delegate TXT records as a separate zone in this case.  They are in the same zone as the 'domain.name' and whatever other records that name has.
+
+
+Yes to what you said, Bob. 
+
+What I wanted to highlight a possible consideration is that from the perspective of "name" TLD (in our `_rfcxxx.domain.name` example), the `domain.name` is usually delegating to the zone of `domain.name` (SLD). apex TXT is always associated with whoever manages `domain.name`. But _rfcxxx.domain.name is managed by whoever zone manages _rfcxxx.domain.name, it could be the same zone of domain.name but also could be its own. One potential unintended consequence may be people starting to use different RR types for _rfcxxx.domain.name or even subdomains under <foo>._rfcxxx.domain.name. This  potential unintended consequence may be good and may be bad.  
+
+I am personally open to either way. My plan is to present this pending decision in RFC to the WG and ask for a preferred option.
+ 
+
+ 
+-- 
+Bob Harold
+ 
+
+-- 
+Bob Harold
+ 
